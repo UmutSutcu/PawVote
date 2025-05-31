@@ -41,7 +41,7 @@ export default function Home() {
       // Şimdilik mock data kullanıyoruz
       const mockAnimals: Animal[] = [
         { name: "Aslan", votes: 15, hasVoted: false },
-        { name: "Kedi", votes: 12, hasVoted: true },
+        { name: "Kedi", votes: 15, hasVoted: false },
         { name: "Köpek", votes: 8, hasVoted: false },
         { name: "Kartal", votes: 5, hasVoted: false },
       ];

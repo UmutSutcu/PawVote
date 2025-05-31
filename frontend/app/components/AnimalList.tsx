@@ -49,7 +49,12 @@ export default function AnimalList({ animals, onVote, loading }: AnimalListProps
       'penguen': '🐧',
       'flamingo': '🦩',
       'papağan': '🦜',
-      'baykuş': '🦉'
+      'baykuş': '🦉',
+      'lemur': '🦧',
+      'kopekbaligi': '🦈',
+      'mirket': '🦡',
+      'ari': '🐝',
+      'sincap': '🐿️',
     };
     
     return animalEmojis[name.toLowerCase()] || '🐾';
