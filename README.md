@@ -1,21 +1,97 @@
 # 🐾 PawVote – Decentralized Animal Voting on Stellar Soroban
 
-**PawVote** is a decentralized voting dApp powered by **Stellar** and **Soroban**. Users can add their favorite animals and vote for them. All actions are securely recorded on the blockchain, ensuring transparency and fairness in a fun and interactive way.
+**PawVote** is a decentralized voting dApp built using **Stellar** and **Soroban smart contracts**. It allows users to add their favorite animals and vote for them. All actions—wallet connection, animal submission, and voting—are executed on-chain for full transparency and decentralization.
 
 ## 🚀 Features
 
-- 🌐 Modern frontend built with **Next.js**
-- 🦀 Smart contracts written in **Rust / Soroban**
+- 🌐 Frontend built with **Next.js**
+- 🦀 Smart contracts written in **Rust** with **Soroban**
 - 🔐 Secure wallet integration using **Freighter**
-- 🐕 Add new animals & 🗳️ vote functionality
-- 🏆 Live leaderboard sorted by vote count
-- 🎨 Minimal and intuitive UI styled with **Tailwind CSS**
+- 🐕 Add new animals and 🗳️ vote for your favorites
+- 📊 Live list sorted by total votes (descending)
+- 🎨 Clean, modern, mobile-friendly UI using **Tailwind CSS**
 
 ## 📂 Project Structure
 
 ```bash
 /contract             # Rust/Soroban smart contract code
 /app                  # Next.js frontend application
-/screenshots          # Application screenshots
+/screenshots          # UI screenshots
 /tailwind.config.js   # Tailwind CSS configuration
-/README.md            # This documentation file
+/README.md            # This file
+```
+
+## 🛠️ Setup & Installation
+
+1️⃣ **Clone the repository:**
+
+```bash
+git clone https://github.com/<your_username>/pawvote.git
+cd pawvote
+```
+
+2️⃣ **Install frontend dependencies:**
+
+```bash
+cd app
+npm install
+```
+
+3️⃣ **Start the development server:**
+
+```bash
+npm run dev
+```
+
+4️⃣ **Build the smart contract:**
+
+```bash
+cd ../contract
+cargo build --target wasm32-unknown-unknown --release
+```
+
+> ⚠️ **Note:** Make sure the [Soroban CLI](https://soroban.stellar.org/docs/getting-started/environment#installing-soroban-cli) is installed before compiling the contract.
+
+## ⚙️ How It Works
+
+- Users connect their Freighter wallet to the dApp.
+- They can submit a new animal by entering its name (1–30 characters, no duplicates).
+- Each wallet can vote **once per animal**.
+- All votes are recorded as **on-chain Soroban transactions**.
+- The animal list is displayed in descending order based on vote count.
+
+## 📸 Screenshots
+
+
+
+## 🧪 Tech Stack
+
+- **Frontend:** Next.js, React, Tailwind CSS
+- **Smart Contracts:** Rust, Soroban (WASM)
+- **Wallet:** Freighter (Stellar wallet extension)
+
+## 📄 License
+
+This project is licensed under the [MIT License](LICENSE).
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome!
+
+- 🔧 Submit pull requests with improvements or new features
+- 🐞 Report bugs via GitHub Issues
+- 💡 Suggest enhancements and ideas
+
+---
+
+## 🔗 Useful Links
+
+- 📚 [Stellar Developer Documentation](https://developers.stellar.org/docs/)
+- 🔧 [Soroban Docs](https://soroban.stellar.org/docs)
+- 💼 [Freighter Wallet](https://freighter.app/)
+
+---
+
+> ✅ **Reminder:** Before using the dApp, make sure to build the smart contract inside the `/contract` directory.

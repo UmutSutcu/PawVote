@@ -53,8 +53,11 @@ export default function AnimalList({ animals, onVote, loading }: AnimalListProps
       'lemur': '🦧',
       'kopekbaligi': '🦈',
       'mirket': '🦡',
-      'ari': '🐝',
       'sincap': '🐿️',
+      'tavuk': '🐔',
+      'kanarya': '🐤',
+      'inek': '🐄',
+      'at': '🐎',
     };
     
     return animalEmojis[name.toLowerCase()] || '🐾';
