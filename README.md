@@ -62,7 +62,9 @@ cargo build --target wasm32-unknown-unknown --release
 
 ## 📸 Screenshots
 
-![Uploading image.png…]()
+![image](https://github.com/user-attachments/assets/d0eb731f-5896-4cb8-9e56-35f77bfbb794)
+
+
 
 
 ## 🧪 Tech Stack
