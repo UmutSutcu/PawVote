@@ -1,21 +1,21 @@
-# 🐾 Stellar-Soroban Voting DApp – Hayvanlara Oy Ver!
+# 🐾 PawVote – Decentralized Animal Voting on Stellar Soroban
 
-Bu proje, **Stellar + Soroban** teknolojilerini kullanarak merkeziyetsiz bir oylama uygulamasıdır. Kullanıcılar sevdikleri hayvanları ekleyebilir ve favori hayvanlarına oy verebilirler. Tüm işlemler blockchain üzerinde güvenli ve şeffaf şekilde gerçekleştirilir.
+**PawVote** is a decentralized voting dApp powered by **Stellar** and **Soroban**. Users can add their favorite animals and vote for them. All actions are securely recorded on the blockchain, ensuring transparency and fairness in a fun and interactive way.
 
-## 🚀 Özellikler
+## 🚀 Features
 
-- 🌐 **Next.js** tabanlı modern frontend
-- 🦀 **Rust / Soroban** ile yazılmış akıllı sözleşmeler
-- 🔐 **Freighter cüzdan** bağlantısı
-- 🐕 Yeni hayvan ekleme & 🗳️ Oy verme işlevleri
-- 🏆 Oy sayısına göre sıralı hayvan listesi
-- 🎨 Şık ve sade kullanıcı arayüzü (Tailwind CSS)
+- 🌐 Modern frontend built with **Next.js**
+- 🦀 Smart contracts written in **Rust / Soroban**
+- 🔐 Secure wallet integration using **Freighter**
+- 🐕 Add new animals & 🗳️ vote functionality
+- 🏆 Live leaderboard sorted by vote count
+- 🎨 Minimal and intuitive UI styled with **Tailwind CSS**
 
-## 📂 Proje Yapısı
+## 📂 Project Structure
 
 ```bash
-/contract             # Rust/Soroban akıllı sözleşme kodları
-/app                  # Next.js frontend uygulaması
-/screenshots          # Uygulamaya ait ekran görüntüleri
-/tailwind.config.js   # Tailwind yapılandırması
-/README.md            # Bu döküman!
+/contract             # Rust/Soroban smart contract code
+/app                  # Next.js frontend application
+/screenshots          # Application screenshots
+/tailwind.config.js   # Tailwind CSS configuration
+/README.md            # This documentation file
