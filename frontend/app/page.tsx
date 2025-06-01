@@ -2,11 +2,15 @@
 import React, { useEffect, useState } from "react";
 import freighterApi from "@stellar/freighter-api";
 import WalletConnection from "@/app/components/WalletConnection";
+import VotingCard from "@/app/components/VotingCard";
 import AnimalForm from "@/app/components/AnimalForm";
 import AnimalList from "@/app/components/AnimalList";
+import { StellarService } from "@/app/services/stellarService";
 
 export interface Animal {
+  id: string;
   name: string;
+  emoji: string;
   votes: number;
   hasVoted?: boolean;
 }
@@ -15,8 +19,21 @@ export default function Home() {
   const [publicKey, setPublicKey] = useState<string | null>(null);
   const [animals, setAnimals] = useState<Animal[]>([]);
   const [loading, setLoading] = useState(false);
+  const [totalVotes, setTotalVotes] = useState(0);
+  const [stellarService, setStellarService] = useState<StellarService | null>(null);
+  const [viewMode, setViewMode] = useState<'cards' | 'list'>('cards');
 
-  // Sayfa yüklendiğinde cüzdan kontrolü
+  // Initial animal list - in a real app this would come from a smart contract
+  const initialAnimals: Animal[] = [
+    { id: "1", name: "Aslan", emoji: "🦁", votes: 15, hasVoted: false },
+    { id: "2", name: "Kedi", emoji: "🐱", votes: 12, hasVoted: false },
+    { id: "3", name: "Köpek", emoji: "🐕", votes: 20, hasVoted: false },
+    { id: "4", name: "Kartal", emoji: "🦅", votes: 8, hasVoted: false },
+    { id: "5", name: "Balık", emoji: "🐠", votes: 5, hasVoted: false },
+    { id: "6", name: "Kaplumbağa", emoji: "🐢", votes: 3, hasVoted: false },
+  ];
+
+  // Check wallet connection and load animals on page load
   useEffect(() => {
     const checkFreighter = async () => {
       try {
@@ -24,31 +41,27 @@ export default function Home() {
         if (connected) {
           const { address } = await freighterApi.getAddress();
           setPublicKey(address);
-          await loadAnimals(address);
+          setStellarService(new StellarService());
         }
       } catch (error) {
         console.error("Error checking Freighter connection:", error);
       }
     };
     checkFreighter();
+    loadAnimals();
   }, []);
 
-  // Hayvanları yükle (mock data - gerçek uygulamada smart contract'tan gelecek)
-  const loadAnimals = async (userAddress: string) => {
+  // Load animals
+  const loadAnimals = async () => {
     setLoading(true);
     try {
-      // Bu kısım gerçek uygulamada smart contract'tan veri çekecek
-      // Şimdilik mock data kullanıyoruz
-      const mockAnimals: Animal[] = [
-        { name: "Aslan", votes: 15, hasVoted: false },
-        { name: "Kedi", votes: 15, hasVoted: false },
-        { name: "Köpek", votes: 8, hasVoted: false },
-        { name: "Kartal", votes: 5, hasVoted: false },
-      ];
-      
-      // Oy sayısına göre sırala (büyükten küçüğe)
-      const sortedAnimals = mockAnimals.sort((a, b) => b.votes - a.votes);
+      // Sort animals by votes (highest to lowest)
+      const sortedAnimals = [...initialAnimals].sort((a, b) => b.votes - a.votes);
       setAnimals(sortedAnimals);
+      
+      // Calculate total votes
+      const total = sortedAnimals.reduce((sum, animal) => sum + animal.votes, 0);
+      setTotalVotes(total);
     } catch (error) {
       console.error("Error loading animals:", error);
     } finally {
@@ -56,52 +69,98 @@ export default function Home() {
     }
   };
 
-  // Cüzdan bağlantısı
+  // Wallet connection handler
   const handleWalletConnect = (address: string) => {
     setPublicKey(address);
-    loadAnimals(address);
+    setStellarService(new StellarService());
   };
 
-  // Hayvan ekleme
-  const handleAddAnimal = async (animalName: string) => {
-    if (!publicKey) return;
-    
+  // Vote success handler
+  const handleVoteSuccess = async (animalId: string, voteType: 'like' | 'dislike') => {
     setLoading(true);
     try {
-      // Bu kısım gerçek uygulamada smart contract çağrısı yapacak
-      const newAnimal: Animal = {
-        name: animalName,
-        votes: 0,
-        hasVoted: false
-      };
-      
-      setAnimals(prev => [...prev, newAnimal].sort((a, b) => b.votes - a.votes));
-    } catch (error) {
-      console.error("Error adding animal:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Oy verme
-  const handleVote = async (animalName: string) => {
-    if (!publicKey) return;
-    
-    setLoading(true);
-    try {
-      // Bu kısım gerçek uygulamada smart contract çağrısı yapacak
+      // Update local state to reflect the vote
       setAnimals(prev => 
         prev.map(animal => 
-          animal.name === animalName 
-            ? { ...animal, votes: animal.votes + 1, hasVoted: true }
+          animal.id === animalId 
+            ? { ...animal, votes: animal.votes + (voteType === 'like' ? 1 : -1), hasVoted: true }
             : animal
         ).sort((a, b) => b.votes - a.votes)
       );
+      
+      setTotalVotes(prev => prev + (voteType === 'like' ? 1 : -1));
     } catch (error) {
-      console.error("Error voting:", error);
+      console.error("Error updating vote:", error);
     } finally {
       setLoading(false);
     }
+  };
+
+  // Add new animal handler
+  const handleAddAnimal = (name: string) => {
+    const newAnimal: Animal = {
+      id: (animals.length + 1).toString(),
+      name: name,
+      emoji: getAnimalEmoji(name),
+      votes: 0,
+      hasVoted: false
+    };
+    
+    setAnimals(prev => [...prev, newAnimal].sort((a, b) => b.votes - a.votes));
+  };
+
+  // Vote handler for AnimalList component
+  const handleVote = async (animalName: string) => {
+    const animal = animals.find(a => a.name === animalName);
+    if (animal && stellarService) {
+      await handleVoteSuccess(animal.id, 'like');
+    }
+  };
+
+  // Get animal emoji helper function
+  const getAnimalEmoji = (name: string) => {
+    const animalEmojis: { [key: string]: string } = {
+      'aslan': '🦁',
+      'kedi': '🐱',
+      'köpek': '🐶',
+      'kartal': '🦅',
+      'fil': '🐘',
+      'kaplan': '🐯',
+      'panda': '🐼',
+      'koala': '🐨',
+      'zebra': '🦓',
+      'zürafa': '🦒',
+      'maymun': '🐵',
+      'ayı': '🐻',
+      'tavşan': '🐰',
+      'kaplumbağa': '🐢',
+      'balık': '🐟',
+      'köpekbalığı': '🦈',
+      'yunus': '🐬',
+      'balina': '🐋',
+      'ahtapot': '🐙',
+      'kelebek': '🦋',
+      'arı': '🐝',
+      'karınca': '🐜',
+      'örümcek': '🕷️',
+      'yılan': '🐍',
+      'timsah': '🐊',
+      'kurbağa': '🐸',
+      'penguen': '🐧',
+      'flamingo': '🦩',
+      'papağan': '🦜',
+      'baykuş': '🦉',
+      'lemur': '🦧',
+      'kopekbaligi': '🦈',
+      'mirket': '🦡',
+      'sincap': '🐿️',
+      'tavuk': '🐔',
+      'kanarya': '🐤',
+      'inek': '🐄',
+      'at': '🐎',
+    };
+    
+    return animalEmojis[name.toLowerCase()] || '🐾';
   };
 
   return (
@@ -113,7 +172,7 @@ export default function Home() {
             🐾 Hayvan Oylama DApp
           </h1>
           <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-            Sevdiğiniz hayvanları ekleyin ve en popüler hayvanları belirlemek için oy verin!
+            Stellar (XLM) ödemeleri kullanarak sevdiğiniz hayvanlara oy verin! Her oy 0.1 XLM tutar.
           </p>
         </div>
 
@@ -127,30 +186,92 @@ export default function Home() {
 
         {/* Main Content */}
         {publicKey ? (
-          <div className="grid lg:grid-cols-2 gap-8">
+          <div>
+            {/* Stats */}
+            <div className="text-center mb-8">
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 max-w-md mx-auto">
+                <h3 className="text-2xl font-bold text-white mb-2">Toplam Oy</h3>
+                <div className="text-4xl font-bold text-yellow-400">{totalVotes}</div>
+                <p className="text-gray-300 mt-2">Harcanan XLM: {(totalVotes * 0.1).toFixed(1)} XLM</p>
+              </div>
+            </div>
+
+            {/* View Mode Toggle */}
+            <div className="flex justify-center mb-8">
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-2 flex space-x-2">
+                <button
+                  onClick={() => setViewMode('cards')}
+                  className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
+                    viewMode === 'cards' 
+                      ? 'bg-purple-600 text-white' 
+                      : 'text-gray-300 hover:text-white hover:bg-white/10'
+                  }`}
+                >
+                  🎴 Kart Görünümü
+                </button>
+                <button
+                  onClick={() => setViewMode('list')}
+                  className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
+                    viewMode === 'list' 
+                      ? 'bg-purple-600 text-white' 
+                      : 'text-gray-300 hover:text-white hover:bg-white/10'
+                  }`}
+                >
+                  📋 Liste Görünümü
+                </button>
+              </div>
+            </div>
+
             {/* Add Animal Form */}
-            <div>
+            <div className="mb-8">
               <AnimalForm 
                 onAddAnimal={handleAddAnimal}
-                existingAnimals={animals.map(a => a.name)}
+                existingAnimals={animals.map(animal => animal.name)}
                 loading={loading}
               />
             </div>
 
-            {/* Animal List */}
-            <div>
+            {viewMode === 'cards' ? (
+              /* Animal Voting Cards */
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {animals.map((animal) => (
+                  <VotingCard
+                    key={animal.id}
+                    animal={animal}
+                    userPublicKey={publicKey}
+                    onVoteSuccess={handleVoteSuccess}
+                  />
+                ))}
+              </div>
+            ) : (
+              /* Animal List View */
               <AnimalList 
                 animals={animals}
                 onVote={handleVote}
                 loading={loading}
               />
+            )}
+
+            {/* Instructions */}
+            <div className="mt-12 bg-white/10 backdrop-blur-sm rounded-xl p-6">
+              <h3 className="text-xl font-bold text-white mb-4">Nasıl Oy Verilir:</h3>
+              <div className="space-y-2 text-gray-300">
+                <p className="flex items-center"><span className="text-blue-400 mr-2">1.</span> Freighter cüzdanınızın Stellar Testnet'e bağlı olduğundan emin olun</p>
+                <p className="flex items-center"><span className="text-blue-400 mr-2">2.</span> Oy vermek için cüzdanınızda en az 0.1 XLM bulunduğundan emin olun</p>
+                <p className="flex items-center"><span className="text-blue-400 mr-2">3.</span> Yeni hayvan ekleyebilir veya mevcut hayvanlara oy verebilirsiniz</p>
+                <p className="flex items-center"><span className="text-blue-400 mr-2">4.</span> Kart görünümü ile liste görünümü arasında geçiş yapabilirsiniz</p>
+                <p className="flex items-center"><span className="text-blue-400 mr-2">5.</span> Her oy 0.1 XLM ödeme gerektirir ve Freighter cüzdanınızda onaylanmalıdır</p>
+              </div>
             </div>
           </div>
         ) : (
           <div className="text-center text-gray-300 mt-12">
             <div className="text-6xl mb-4">🔒</div>
-            <p className="text-xl">
-              Hayvan oylama sistemine katılmak için lütfen cüzdanınızı bağlayın
+            <p className="text-xl mb-4">
+              Hayvanlara oy vermeye başlamak için Freighter cüzdanınızı bağlayın!
+            </p>
+            <p className="text-gray-400">
+              Freighter tarayıcı uzantısının yüklendiğinden ve Stellar Testnet'te olduğunuzdan emin olun.
             </p>
           </div>
         )}

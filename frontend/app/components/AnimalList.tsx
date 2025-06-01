@@ -4,7 +4,7 @@ import { Animal } from "@/app/page";
 
 interface AnimalListProps {
   animals: Animal[];
-  onVote: (animalName: string) => void;
+  onVote: (animalName: string) => Promise<void>;
   loading: boolean;
 }
 
@@ -117,8 +117,7 @@ export default function AnimalList({ animals, onVote, loading }: AnimalListProps
                   <div className="flex items-center space-x-2 px-4 py-2 bg-green-500/20 rounded-lg border border-green-500/30">
                     <span className="text-green-400">✅</span>
                     <span className="text-green-400 font-medium text-sm">Oy Verildi</span>
-                  </div>
-                ) : (
+                  </div>                ) : (
                   <button
                     onClick={() => onVote(animal.name)}
                     disabled={loading}
@@ -130,12 +129,12 @@ export default function AnimalList({ animals, onVote, loading }: AnimalListProps
                     {loading ? (
                       <div className="flex items-center space-x-2">
                         <div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                        <span className="text-sm">Oy Veriliyor...</span>
+                        <span className="text-sm">Ödeme...</span>
                       </div>
                     ) : (
                       <div className="flex items-center space-x-2">
-                        <span>👍</span>
-                        <span className="text-sm">Oy Ver</span>
+                        <span>💰</span>
+                        <span className="text-sm">0.1 XLM Öde</span>
                       </div>
                     )}
                   </button>
