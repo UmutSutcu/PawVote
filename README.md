@@ -26,7 +26,7 @@
 1️⃣ **Clone the repository:**
 
 ```bash
-git clone https://github.com/<your_username>/pawvote.git
+git clone https://github.com/UmutSutcu/pawvote.git
 cd pawvote
 ```
 
@@ -56,7 +56,7 @@ cargo build --target wasm32-unknown-unknown --release
 
 - Users connect their Freighter wallet to the dApp.
 - They can submit a new animal by entering its name (1–30 characters, no duplicates).
-- Each wallet can vote **once per animal**.
+- Each vote 0.1 xlm.
 - All votes are recorded as **on-chain Soroban transactions**.
 - The animal list is displayed in descending order based on vote count.
 
