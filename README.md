@@ -1,5 +1,7 @@
 # 🐾 PawVote – Decentralized Animal Voting on Stellar Soroban
 
+🌐 **Live Demo:** [https://paw-vote.vercel.app](https://paw-vote.vercel.app)
+
 **PawVote** is a decentralized voting dApp built using **Stellar** and **Soroban smart contracts**. It allows users to add their favorite animals and vote for them. All actions—wallet connection, animal submission, and voting—are executed on-chain for full transparency and decentralization.
 
 ## 🚀 Features
