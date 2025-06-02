@@ -58,6 +58,7 @@ export default function AnimalList({ animals, onVote, loading }: AnimalListProps
       'kanarya': '🐤',
       'inek': '🐄',
       'at': '🐎',
+      'keçi': '🐐',
     };
     
     return animalEmojis[name.toLowerCase()] || '🐾';

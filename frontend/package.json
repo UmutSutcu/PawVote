@@ -1,12 +1,13 @@
 {
   "name": "frontend",
   "version": "0.1.0",
-  "private": true,
-  "scripts": {
+  "private": true,  "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "export": "next build",
+    "deploy": "npm run export"
   },
   "dependencies": {
     "@stellar/freighter-api": "^4.1.0",
