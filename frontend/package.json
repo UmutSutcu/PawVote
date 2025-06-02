@@ -5,9 +5,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "export": "next build",
-    "deploy": "npm run export"
+    "lint": "next lint"
   },
   "dependencies": {
     "@stellar/freighter-api": "^4.1.0",

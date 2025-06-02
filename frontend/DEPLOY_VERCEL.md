@@ -1,26 +1,30 @@
 # Stellar Voting DApp - Vercel Deploy Rehberi
 
-## Adım 1: Vercel Hesabı Oluştur
-1. https://vercel.com adresine git
-2. GitHub hesabınla giriş yap
+## ✅ Düzeltme Yapıldı!
+404 NOT_FOUND hatasını düzeltmek için:
+- ❌ `output: 'export'` kaldırıldı
+- ✅ Vercel.json güncellendi
+- ✅ Scripts temizlendi
 
-## Adım 2: Proje Deploy Et
-1. Vercel dashboard'ta "New Project" tıkla
-2. GitHub repository'ni seç veya import et
-3. Framework: Next.js otomatik algılanır
-4. Build ayarları:
-   - Build Command: `npm run build`
-   - Output Directory: `.next`
-   - Install Command: `npm install`
+## Adım 1: Vercel'de Yeniden Deploy
+1. Vercel dashboard'ta proje sayfasına git
+2. "Deployments" sekmesine tıkla
+3. "Redeploy" butonuna tıkla
+4. "Use existing Build Cache" işaretini KALDIR
+5. "Redeploy" tıkla
 
-## Adım 3: Environment Variables
-Deploy sırasında bu değişkenler otomatik ayarlanır:
-- NEXT_PUBLIC_STELLAR_NETWORK=testnet
-- NEXT_PUBLIC_HORIZON_URL=https://horizon-testnet.stellar.org
+## Adım 2: Build Settings Kontrol
+Vercel'de şu ayarları kontrol et:
+- **Framework**: Next.js
+- **Build Command**: `next build`
+- **Output Directory**: `.next`
+- **Node.js Version**: 18.x
 
-## Adım 4: Deploy
-"Deploy" butonuna tıkla ve bekle!
+## Adım 3: Environment Variables (Opsiyonel)
+Vercel settings'de ekle:
+- `NEXT_PUBLIC_STELLAR_NETWORK` = `testnet`
+- `NEXT_PUBLIC_HORIZON_URL` = `https://horizon-testnet.stellar.org`
 
 ## Sonuç
-Deploy başarılı olduğunda vercel.app URL'i alacaksın.
-Freighter wallet ile bağlanıp Stellar TestNet'te oy verebilirsin!
+Bu değişikliklerden sonra deploy başarılı olacak!
+DApp Stellar TestNet'te çalışır durumda olacak.
